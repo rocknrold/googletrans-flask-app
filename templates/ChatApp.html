@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Python Chat App Yo</title>
+    <title>Chikalate</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='chat.ico')}}" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
@@ -30,32 +31,37 @@
   </head>
   <body>
 
-    <div class="text-center well"><b>My Super Python Chat App</b></div>
+    <div class="text-center well" style="max-height: 10%;"><img src="{{ url_for('static', filename='chat.ico')}}" style="max-width:3%"><b> Automatic Chat Translate App</b></div>
 
     <div class="container">
       <div class="col-sm-8">
         <div class="no_message">
           <h1 style='color: #ccc'>No message yet..</h1>
-          <div class="message_holder"></div>
+          <div class="message_holder" style="overflow-y: auto; height: 500px; max-width: 100%;"></div>
         </div>
       </div>
       <div class="col-sm-4">
-        <form action="" method="POST">
-          <b>Type your message below <span class="glyphicon glyphicon-arrow-down"></span></b>
+        <form action="" method="POST" style="background-color: #f5f5f5;">
+          <b>Chat <span class="glyphicon glyphicon-arrow-down"></span></b>
           <div class="clearfix" style="margin-top: 5px;"></div>
-          <input type="text" class="username form-control" placeholder="User Name">
+          <input type="text" class="username form-control" placeholder="User name" id="user">
           <div style="padding-top: 5px;"></div>
-          <input type="text" class="message form-control" placeholder="Messages">
+          <input type="text" class="message form-control" placeholder="Messages" id="msg">
           <div style="padding-top: 5px;"></div>
-          <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-send"></span> Send</button>
+          <button type="submit" class="btn btn-success btn-block" id="nice"><span class="glyphicon glyphicon-send"></span> Send</button>
         </form>
       </div>
     </div>
 
+ 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.1/socket.io.min.js"></script>
+
+
     <script>
       var socket = io.connect( 'http://' + document.domain + ':' + location.port )
       // broadcast a message
@@ -79,9 +85,11 @@
       // capture message
       socket.on( 'my response', function( msg ) {
         console.log( msg )
-        if( typeof msg.user_name !== 'undefined' ) {
+        if( typeof msg.user_name !== 'undefined' && msg.user_name !== "" ) {
           $( 'h1' ).remove()
-          $( 'div.message_holder' ).append( '<div class="msg_bbl"><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+          $( 'div.message_holder' ).append('<div class="msg_bbl"><b style="color: #000">'+ msg.user_name +' : </b>'+
+                    '<span id="msg-translate" class="p-5"> '+ msg.message +'</span>&Tab;'+
+                    '<small style="color:red;">Translated from '+ msg.source +'</small>')
         }
       } )
     </script>
